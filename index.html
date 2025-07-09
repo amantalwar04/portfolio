@@ -3,145 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amandeep Singh Talwar - Strategic Leader</title>
+    <title>Amandeep Singh Talwar - Interactive Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* bg-slate-50 */
         }
         .fade-in {
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 1s ease-in-out forwards;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Timeline Styles */
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            padding-top: 50px;
+        }
+        .timeline-track {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #cbd5e1; /* slate-300 */
+            border-radius: 2px;
+        }
+        .timeline-marker {
+            position: absolute;
+            bottom: 50px;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border: 4px solid #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 5;
+        }
+        .timeline-marker:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+        .timeline-marker.active {
+            background-color: #3b82f6; /* blue-500 */
+            border-color: #fff;
+            box-shadow: 0 0 0 4px #3b82f6;
+        }
+        .marker-label {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569; /* slate-600 */
+        }
+
+        /* Timeline Avatar */
+        #timeline-avatar {
+            position: absolute;
+            bottom: 58px; /* Positioned above the timeline track */
+            left: 0; /* JS will update this */
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            transition: left 1s ease-in-out;
+            transform: translateX(-50%);
+            z-index: 10;
+            padding: 2px;
+            background-color: #3b82f6;
+            animation: glow-pulse 2.5s infinite ease-in-out;
+        }
+
+        #timeline-avatar img {
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 16px 3px rgba(59, 130, 246, 0.8);
+            }
+        }
+
+        /* Tab Styles */
+        .tab-button.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        /* General Card Style */
+        .content-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: card-fade-in 0.5s forwards;
+        }
+
+        @keyframes card-fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-slate-800">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
         
         <!-- Header Section -->
         <header class="flex flex-col md:flex-row items-center justify-between mb-12 fade-in">
-            <div class="flex items-center mb-6 md:mb-0">
-                <img src="https://placehold.co/100x100/E2E8F0/4A5568?text=AT" alt="Amandeep Singh Talwar" class="w-24 h-24 rounded-full mr-6 border-4 border-white shadow-lg">
+            <div class="flex items-center mb-6 md:mb-0 text-center md:text-left">
+                <img src="https://media.licdn.com/dms/image/v2/D5603AQGOqVyPAwjM3Q/profile-displayphoto-scale_200_200/B56ZfoS6P_HEAk-/0/1751948961468?e=1757548800&v=beta&t=32XViDK9WtHvv6UUlps6Yd0YZLeQ0w0hiT6wWO-ee2k" onerror="this.onerror=null;this.src='https://placehold.co/100x100/3b82f6/ffffff?text=AT&font=inter';" alt="Amandeep Singh Talwar" class="w-24 h-24 rounded-full mr-0 md:mr-6 mb-4 md:mb-0 border-4 border-white shadow-lg mx-auto">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900">Amandeep Singh Talwar</h1>
-                    <p class="text-xl text-blue-600 font-medium">Strategic Leader | Technical Communication, Automation & Digital Transformation</p>
-                    <p class="text-md text-gray-500 mt-1">Hyderabad, Telangana, India</p>
+                    <h1 class="text-4xl font-bold text-slate-900">Amandeep Singh Talwar</h1>
+                    <p class="text-xl text-blue-600 font-medium">Strategic Leader | Technical Communication & Digital Transformation</p>
+                    <p class="text-md text-slate-500 mt-1">Hyderabad, Telangana, India</p>
                 </div>
             </div>
             <div class="flex space-x-4">
-                <a href="https://www.linkedin.com/in/amantalwar" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-600 transition duration-300">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014V8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.71zM4.988 7.42a1.448 1.448 0 11-2.9 0 1.448 1.448 0 012.9 0zM6.443 8.59H3.53v7.748h2.913V8.59zM17.835 2H6.165A4.17 4.17 0 002 6.165v11.67A4.17 4.17 0 006.165 22h11.67A4.17 4.17 0 0022 17.835V6.165A4.17 4.17 0 0017.835 2z" clip-rule="evenodd"></path></svg>
+                <a href="https://www.linkedin.com/in/amantalwar" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-600 transition duration-300" title="LinkedIn">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014V8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.71zM4.988 7.42a1.448 1.448 0 11-2.9 0 1.448 1.448 0 012.9 0zM6.443 8.59H3.53v7.748h2.913V8.59zM17.835 2H6.165A4.17 4.17 0 002 6.165v11.67A4.17 4.17 0 006.165 22h11.67A4.17 4.17 0 0022 17.835V6.165A4.17 4.17 0 0017.835 2z" clip-rule="evenodd"></path></svg>
+                </a>
+                <a href="mailto:amandeep.talwar@gmail.com" class="text-slate-500 hover:text-blue-600 transition duration-300" title="Email">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.003 5.884L10 11.882l7.997-5.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 6-8-6V16a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                </a>
+                <a href="tel:+917672099275" class="text-slate-500 hover:text-blue-600 transition duration-300" title="Call">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.35 15.35 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path></svg>
+                </a>
+                <a href="https://wa.me/917672099275" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-600 transition duration-300" title="WhatsApp">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zM12.04 20.15c-1.48 0-2.92-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.264 8.264 0 01-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 4.54 0 8.24 3.7 8.24 8.24-0 4.55-3.7 8.24-8.24 8.24zm4.52-6.13c-.25-.12-1.47-.72-1.7-.81-.22-.08-.38-.12-.54.12-.16.25-.64.81-.79.97-.14.16-.29.18-.54.06-.25-.12-1.06-.39-2.02-1.25-.74-.66-1.23-1.47-1.38-1.72s-.02-.38.1-.51c.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.3-.02-.43-.06-.12-.54-1.29-.74-1.77-.2-.48-.4-.41-.54-.42-.14 0-.3 0-.46 0s-.43.06-.66.31c-.22.25-.86.84-.86 2.05 0 1.21.88 2.37 1 2.53.12.16 1.75 2.67 4.24 3.73.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.06 1.47-.6 1.68-1.18.2-.58.2-1.08.14-1.18-.06-.12-.22-.18-.47-.3z"></path></svg>
                 </a>
             </div>
         </header>
 
         <!-- About Me Section -->
-        <section class="mb-12 fade-in" style="animation-delay: 100ms;">
-            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6">About Me</h2>
-            <p class="text-lg leading-relaxed text-gray-700">
+        <section class="mb-16 fade-in" style="animation-delay: 100ms;">
+            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6">Summary</h2>
+            <p class="text-lg leading-relaxed text-slate-700">
                 With over two decades of experience in technical communication, I am a strategic leader who has successfully driven innovation and organizational growth across the technology, semiconductor, and software domains. My expertise lies in aligning technical strategies with business goals, streamlining processes, and fostering collaboration to deliver impactful results. I specialize in building and leading global teams, developing automation frameworks, transforming documentation systems into user-centric solutions, and driving digital transformation, including AI-enabled workflows.
             </p>
         </section>
 
         <!-- Experience Section -->
-        <section class="mb-12 fade-in" style="animation-delay: 200ms;">
-            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-8">Work Experience</h2>
-            <div class="space-y-8">
-                <!-- Job -->
-                <div class="flex">
-                    <div class="w-1/3">
-                        <p class="font-semibold text-gray-900">Nov 2024 - Present</p>
-                        <p class="text-gray-500">Autodesk</p>
-                    </div>
-                    <div class="w-2/3 pl-8 border-l-2 border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-900">Content Design Manager</h3>
-                        <p class="mt-2 text-gray-700 leading-relaxed">Pune, Maharashtra, India</p>
-                    </div>
+        <section class="mb-16 fade-in" style="animation-delay: 200ms;">
+            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6">Career Timeline</h2>
+            <div class="timeline-container">
+                <div class="timeline-track"></div>
+                <div id="timeline-avatar">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQGOqVyPAwjM3Q/profile-displayphoto-scale_200_200/B56ZfoS6P_HEAk-/0/1751948961468?e=1757548800&v=beta&t=32XViDK9WtHvv6UUlps6Yd0YZLeQ0w0hiT6wWO-ee2k" onerror="this.onerror=null;this.src='https://placehold.co/44x44/3b82f6/ffffff?text=AT&font=inter';" alt="Amandeep Talwar Avatar">
                 </div>
-                <!-- Job -->
-                <div class="flex">
-                    <div class="w-1/3">
-                        <p class="font-semibold text-gray-900">Sep 2020 - Aug 2024</p>
-                        <p class="text-gray-500">Microchip Technology Inc.</p>
-                    </div>
-                    <div class="w-2/3 pl-8 border-l-2 border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-900">Technical Publications Manager</h3>
-                        <ul class="mt-2 text-gray-700 leading-relaxed list-disc list-inside">
-                            <li>Managed a global team of 10 technical writers, delivering a 95% on-time completion rate.</li>
-                            <li>Led migration of 200+ documents, improving system reliability and reducing manual errors by 40%.</li>
-                            <li>Implemented automation frameworks, reducing project timelines by 20% and increasing productivity by 30%.</li>
-                            <li>Directed migration from unstructured FrameMaker to DITA XML.</li>
-                            <li>Led asset management and publishing using Adobe Experience Manager (AEM).</li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Job -->
-                <div class="flex">
-                    <div class="w-1/3">
-                        <p class="font-semibold text-gray-900">Dec 2014 - Sep 2020</p>
-                        <p class="text-gray-500">Xilinx</p>
-                    </div>
-                    <div class="w-2/3 pl-8 border-l-2 border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-900">Senior Staff Technical Writer / Manager</h3>
-                         <ul class="mt-2 text-gray-700 leading-relaxed list-disc list-inside">
-                            <li>Managed a team of five technical writers, enhancing productivity and performance.</li>
-                            <li>Automated API documentation with templates using GitHub, Doxygen, Sphinx, and Doxyrest.</li>
-                            <li>Spearheaded documentation standards on GitHub.</li>
-                        </ul>
-                    </div>
-                </div>
-                 <!-- Job -->
-                <div class="flex">
-                    <div class="w-1/3">
-                        <p class="font-semibold text-gray-900">Sep 2007 - Dec 2014</p>
-                        <p class="text-gray-500">Freescale Semiconductor</p>
-                    </div>
-                    <div class="w-2/3 pl-8 border-l-2 border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-900">Lead Technical Writer</h3>
-                         <ul class="mt-2 text-gray-700 leading-relaxed list-disc list-inside">
-                            <li>Collaborated with global business units to establish Doxygen standards.</li>
-                            <li>Developed templates for automated API documentation from live source code.</li>
-                            <li>Led the creation of an Eclipse Infocenter for Freescale's technical publications.</li>
-                        </ul>
-                    </div>
-                </div>
+                <div id="timeline-markers"></div>
+            </div>
+            <div id="experience-details" class="mt-8 min-h-[300px]"></div>
+        </section>
+
+        <!-- Combined Info Section -->
+        <section class="mb-16 fade-in" style="animation-delay: 300ms;">
+            <div class="flex flex-wrap border-b border-slate-200 mb-6">
+                <button data-tab="skills" class="tab-button py-2 px-4 -mb-px border-b-2 border-transparent font-semibold text-slate-600 hover:text-blue-600 transition">Top Skills</button>
+                <button data-tab="certifications" class="tab-button py-2 px-4 -mb-px border-b-2 border-transparent font-semibold text-slate-600 hover:text-blue-600 transition">Certifications</button>
+                <button data-tab="awards" class="tab-button py-2 px-4 -mb-px border-b-2 border-transparent font-semibold text-slate-600 hover:text-blue-600 transition">Honors & Awards</button>
+                <button data-tab="languages" class="tab-button py-2 px-4 -mb-px border-b-2 border-transparent font-semibold text-slate-600 hover:text-blue-600 transition">Languages</button>
+            </div>
+            <div id="tab-content">
+                <!-- Content will be injected by JS -->
             </div>
         </section>
 
-        <!-- Skills Section -->
-        <section class="mb-12 fade-in" style="animation-delay: 300ms;">
-            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6">Skills</h2>
-            <div class="flex flex-wrap -m-2">
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Content Strategy</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Digital Asset Management</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Product Strategy</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Technical Communication</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Automation</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Digital Transformation</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">DITA XML</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">Adobe Experience Manager (AEM)</span>
-                <span class="m-2 bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full">JIRA & Confluence</span>
-            </div>
-        </section>
-        
         <!-- Education Section -->
-        <section class="mb-12 fade-in" style="animation-delay: 400ms;">
-            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-8">Education</h2>
-            <div class="space-y-6">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900">Master of Computer Applications (MCA)</h3>
-                    <p class="text-gray-600">Kakatiya University, Warangal</p>
-                    <p class="text-sm text-gray-500">2000 - 2003</p>
+        <section class="mb-16 fade-in" style="animation-delay: 400ms;">
+            <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6">Education</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="content-card">
+                    <h3 class="text-xl font-bold text-slate-900">Master of Computer Applications (MCA)</h3>
+                    <p class="text-slate-600">Kakatiya University, Warangal</p>
+                    <p class="text-sm text-slate-500 mt-1">2000 - 2003</p>
                 </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900">Bachelor's degree, Chemistry</h3>
-                    <p class="text-gray-600">Kakatiya University, Warangal</p>
-                    <p class="text-sm text-gray-500">1996 - 1997</p>
+                <div class="content-card">
+                    <h3 class="text-xl font-bold text-slate-900">Bachelor's degree, Chemistry</h3>
+                    <p class="text-slate-600">Kakatiya University, Warangal</p>
+                    <p class="text-sm text-slate-500 mt-1">1996 - 1997</p>
                 </div>
             </div>
         </section>
@@ -149,19 +211,244 @@
         <!-- Contact Section -->
         <section class="text-center fade-in" style="animation-delay: 500ms;">
              <h2 class="text-3xl font-bold border-b-2 border-blue-500 pb-2 mb-6 inline-block">Get In Touch</h2>
-             <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
+             <p class="text-lg text-slate-700 max-w-2xl mx-auto mb-8">
                 I'm always open to discussing new projects, creative ideas, or opportunities to be part of something exciting. Feel free to reach out.
              </p>
-             <a href="mailto:amandeep.talwar@gmail.com" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+             <a href="mailto:amandeep.talwar@gmail.com?subject=Reaching%20Out%20via%20Your%20Portfolio&body=Hi%20Amandeep%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20wanted%20to%20reach%20out.%0A%0AI'm%20interested%20in%20discussing%3A%20%5BPlease%20specify%3A%20new%20projects%2C%20creative%20ideas%2C%20an%20opportunity%2C%20etc.%5D%0A%0ABest%20regards%2C%0A%0A%5BYour%20Name%5D" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 Contact Me
              </a>
         </section>
 
     </div>
 
-    <footer class="text-center p-6 mt-12 bg-gray-100">
-        <p class="text-gray-500">&copy; 2025 Amandeep Singh Talwar. All Rights Reserved.</p>
+    <footer class="text-center p-6 mt-12 bg-slate-100">
+        <p class="text-slate-500">&copy; 2025 Amandeep Singh Talwar. All Rights Reserved.</p>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DATA ---
+            const experienceData = [
+                {
+                    year: '1999',
+                    company: 'Oasis Public School',
+                    title: 'Teacher',
+                    duration: 'Sep 1999 - Sep 2000',
+                    location: 'N/A',
+                    pos: 5,
+                    details: [
+                        'Provided high-quality education to students and created a positive learning environment.',
+                        'Taught English to Standard V students, and Physical Sciences to Standard VIII students.'
+                    ]
+                },
+                {
+                    year: '2003',
+                    company: 'Webhelp Global Services',
+                    title: 'Product Support Specialist',
+                    duration: 'Nov 2003 - Feb 2004',
+                    location: 'N/A',
+                    pos: 15,
+                    details: [
+                        'Collaborated with the Microsoft Office USA team to promptly address outages and customer issues.',
+                        'Developed customized help manuals for various Microsoft Office users, improving their experience.',
+                        'Offered customer support for a wide range of MS Office products, focusing on troubleshooting and installation.',
+                        'Provided round-the-clock customer support through phone, email, and live chat.'
+                    ]
+                },
+                {
+                    year: '2004',
+                    company: 'Intoto (Now Freescale)',
+                    title: 'Technical Writer',
+                    duration: 'May 2004 - Apr 2007',
+                    location: 'N/A',
+                    pos: 25,
+                    details: [
+                        'Evaluated and transitioned documentation from MS Word to Adobe FrameMaker.',
+                        'Integrated single-sourcing, version control, and formatting standards to enhance efficiency.',
+                        'Created a Doxygen-based documentation system for toolkit documents.',
+                        'Launched the first-generation intranet site "BHARATI" for improved resource access.'
+                    ]
+                },
+                {
+                    year: '2007',
+                    company: 'Fidelity Information Services',
+                    title: 'Senior Consultant',
+                    duration: 'Apr 2007 - Sep 2007',
+                    location: 'Chandigarh',
+                    pos: 35,
+                    details: [
+                        'Created comprehensive user manuals, installation guides, and release notes for the Dexterra Mobility Platform.',
+                        'Engaged closely with experts and stakeholders to ensure accuracy and relevance.',
+                        'Key projects included the Dexterra Siebel Sales Application Guide for BlackBerry and the Mobility Platform 4.9.5 Installation Guide.'
+                    ]
+                },
+                {
+                    year: '2007-14',
+                    company: 'Freescale Semiconductor',
+                    title: 'Lead Technical Writer',
+                    duration: 'Sep 2007 - Dec 2014',
+                    location: 'Noida/Hyderabad',
+                    pos: 48,
+                    details: [
+                        'Collaborated with global business units to establish Doxygen standards, enhancing API documentation quality.',
+                        'Developed templates for automated API documentation from live source code.',
+                        'Led the creation of an Eclipse Infocenter for Freescale\'s technical publications.',
+                        'Directed documentation for CodeWarrior for DPAA using DITA/XML and managed with EMC\'s Docato CMS.'
+                    ]
+                },
+                 {
+                    year: '2014-20',
+                    company: 'Xilinx',
+                    title: 'Staff/Senior/Manager',
+                    duration: 'Dec 2014 - Sep 2020',
+                    location: 'Hyderabad',
+                    pos: 70,
+                    details: [
+                        'Managed a team of five technical writers, enhancing productivity and performance.',
+                        'Automated API documentation with templates using GitHub, Doxygen, Sphinx, and Doxyrest.',
+                        'Developed user-friendly web help systems and XSL transforms for converting source code to DITA XML.',
+                        'Spearheaded documentation standards on GitHub, validating installations and API configurations.'
+                    ]
+                },
+                {
+                    year: '2020-24',
+                    company: 'Microchip Technology',
+                    title: 'Technical Publications Manager',
+                    duration: 'Sep 2020 - Aug 2024',
+                    location: 'India',
+                    pos: 85,
+                    details: [
+                        'Managed a global team of 10 technical writers, delivering a 95% on-time completion rate.',
+                        'Led the migration of 200+ documents to a new system with zero downtime, reducing manual errors by 40%.',
+                        'Implemented best practices and automation frameworks, reducing project timelines by 20% and increasing productivity by 30%.',
+                        'Directed the migration from unstructured FrameMaker to DITA XML.',
+                        'Led asset management and publishing using Adobe Experience Manager (AEM) for the FPGA business unit.'
+                    ]
+                },
+                {
+                    year: '2024',
+                    company: 'Autodesk',
+                    title: 'Content Design Manager',
+                    duration: 'Nov 2024 - Present',
+                    location: 'Pune, Maharashtra',
+                    pos: 98,
+                    details: [
+                        'Currently leading content design initiatives at Autodesk, focusing on enhancing user experience through strategic content.'
+                    ]
+                }
+            ];
+
+            const tabData = {
+                skills: {
+                    title: 'Top Skills',
+                    type: 'grid',
+                    items: ['Content Strategy', 'Digital Asset Management', 'Product Strategy', 'Technical Communication', 'Automation Frameworks', 'Digital Transformation', 'DITA XML', 'Adobe Experience Manager (AEM)', 'JIRA & Confluence', 'Agile Methodologies', 'Team Leadership', 'Process Optimization']
+                },
+                certifications: {
+                    title: 'Certifications',
+                    type: 'list',
+                    items: ['Verified International Academic Qualifications', 'Problem-Solving Techniques', 'Information Mapping Certified Professional', 'Jodi Glickman on Pitching Yourself']
+                },
+                awards: {
+                    title: 'Honors & Awards',
+                    type: 'list',
+                    items: ['BRAVO', 'Certificate of Appreciation', 'Freescale Community Volunteer of the Year - 2008', 'Best Paper Award']
+                },
+                languages: {
+                    title: 'Languages',
+                    type: 'list',
+                    items: ['English (Full Professional)', 'Hindi (Native or Bilingual)', 'Punjabi (Native or Bilingual)', 'Telugu (Native or Bilingual)']
+                }
+            };
+
+            // --- TIMELINE LOGIC ---
+            const markersContainer = document.getElementById('timeline-markers');
+            const detailsContainer = document.getElementById('experience-details');
+            const character = document.getElementById('timeline-avatar');
+
+            experienceData.forEach((job, index) => {
+                const marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                marker.style.left = `${job.pos}%`;
+                marker.dataset.index = index;
+
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = job.year;
+                marker.appendChild(label);
+                
+                markersContainer.appendChild(marker);
+            });
+
+            function displayExperience(index) {
+                const job = experienceData[index];
+                const detailList = job.details.map(detail => `<li class="mb-2">${detail}</li>`).join('');
+
+                detailsContainer.innerHTML = `
+                    <div class="content-card">
+                        <h3 class="text-2xl font-bold text-slate-900">${job.title}</h3>
+                        <p class="text-lg font-semibold text-blue-600">${job.company}</p>
+                        <p class="text-sm text-slate-500 mb-4">${job.duration} | ${job.location}</p>
+                        <ul class="list-disc list-inside text-slate-700 space-y-2">
+                            ${detailList}
+                        </ul>
+                    </div>
+                `;
+
+                // Update active marker
+                document.querySelectorAll('.timeline-marker').forEach(m => m.classList.remove('active'));
+                document.querySelector(`.timeline-marker[data-index='${index}']`).classList.add('active');
+
+                // Move character
+                const targetPos = experienceData[index].pos;
+                character.style.left = `${targetPos}%`;
+            }
+
+            markersContainer.addEventListener('click', function(e) {
+                const marker = e.target.closest('.timeline-marker');
+                if (marker) {
+                    const index = marker.dataset.index;
+                    displayExperience(index);
+                }
+            });
+            
+            // Initial display
+            displayExperience(experienceData.length - 1);
+
+
+            // --- TAB LOGIC ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContentContainer = document.getElementById('tab-content');
+
+            function displayTabContent(tabId) {
+                const content = tabData[tabId];
+                let html = '';
+
+                if (content.type === 'grid') {
+                    const itemsHtml = content.items.map(item => `<div class="m-1.5 bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1.5 rounded-full">${item}</div>`).join('');
+                    html = `<div class="content-card"><div class="flex flex-wrap justify-center">${itemsHtml}</div></div>`;
+                } else if (content.type === 'list') {
+                    const itemsHtml = content.items.map(item => `<li class="mb-2 p-2 bg-slate-50 rounded">${item}</li>`).join('');
+                    html = `<div class="content-card"><ul class="text-slate-700 space-y-1">${itemsHtml}</ul></div>`;
+                }
+                
+                tabContentContainer.innerHTML = html;
+
+                // Update active tab button
+                tabButtons.forEach(button => {
+                    button.classList.toggle('active', button.dataset.tab === tabId);
+                });
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    displayTabContent(button.dataset.tab);
+                });
+            });
+
+            // Initial tab display
+            displayTabContent('skills');
+        });
+    </script>
 </body>
 </html>
