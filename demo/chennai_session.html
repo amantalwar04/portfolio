@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of Technical Information</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Chosen Palette: Warm Neutrals & Subtle Blues -->
+    <!-- Application Structure Plan: The SPA is structured thematically to create a narrative user journey, rather than mirroring the linear report. It starts with a Hero section to set the stage, moves to 'The Problem' (visualizing the 'Static Trap' and 'AI Paradox'), then presents 'The Solution' (Intelligent Content). The core is the interactive 'Demos in Action' section, which allows users to explore specific industry transformations. This is followed by the implications for professionals in 'The Human Imperative' and ends with a clear 'Call to Action'. This structure was chosen because it guides the user from understanding the 'why' (the problem) to the 'what' (the solution) and 'how' (the demos and new roles), making the complex information more digestible and engaging than a simple text document. -->
+    <!-- Visualization & Content Choices: 
+        - The Problem: Goal: Inform. Method: Interactive cards using HTML/CSS/JS to highlight key failures of static docs. Justification: More engaging than a bulleted list.
+        - AI Paradox: Goal: Show Change. Method: Line Chart (Chart.js) visualizing diverging velocities. Justification: A simple visual makes the abstract concept of the paradox immediately clear.
+        - Demos in Action: Goal: Compare/Show Relationships. Method: Tab-based navigation updating text and a dynamic bar chart (Chart.js). Interaction: User clicks a domain, content and chart update to show the 'From/To' transformation. The Personal Development demo now embeds a live portfolio in a styled iframe to serve as a direct, interactive example. Justification: This provides a compelling, real-world demonstration of a dynamic portfolio.
+        - The Human Imperative: Goal: Organize/Inform. Method: Interactive cards for new roles. Interaction: Clicking a role reveals its details in a separate panel. Justification: Breaks down a dense topic into explorable chunks.
+        - All choices adhere to the NO SVG/Mermaid constraint, using Chart.js on Canvas and structured HTML/CSS for visuals. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #333;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .section-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        .demo-button {
+            transition: all 0.3s;
+        }
+        .demo-button.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .config-panel { background-color: #f1f5f9; }
+        .code-panel { background-color: #1e293b; }
+        .output-field {
+            background-color: #ffffff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        select, input[type="number"], textarea {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        select:focus, input[type="number"]:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+        pre[class*="language-"] {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        code[class*="language-"] {
+            color: #e2e8f0; /* Default text color for code */
+            text-shadow: none;
+            font-family: 'Fira Code', 'Courier New', monospace;
+        }
+        .token.comment { color: #64748b; }
+        .token.keyword { color: #f472b6; }
+        .token.function { color: #60a5fa; }
+        .token.number { color: #f59e0b; }
+        .token.operator { color: #94a3b8; }
+        .token.punctuation { color: #94a3b8; }
+        
+        .product-output {
+            color: #1e293b;
+        }
+        .product-output pre, .product-output code {
+            color: inherit;
+            background: transparent !important;
+            text-shadow: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .product-output code.language-xml {
+             font-family: 'Fira Code', 'Courier New', monospace;
+        }
+        .product-output .token.title { color: #1e3a8a; font-weight: bold; }
+        .product-output .token.strong { color: #1e293b; font-weight: 900; }
+        .product-output .token.list { color: #9d174d; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-blue-600">AI & Tech Comm</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#problem" class="nav-link px-3 py-2 text-sm font-medium text-gray-700">The Problem</a>
+                        <a href="#solution" class="nav-link px-3 py-2 text-sm font-medium text-gray-700">The Solution</a>
+                        <a href="#demos" class="nav-link px-3 py-2 text-sm font-medium text-gray-700">Demos</a>
+                        <a href="#imperative" class="nav-link px-3 py-2 text-sm font-medium text-gray-700">Human Imperative</a>
+                        <a href="#action" class="nav-link px-3 py-2 text-sm font-medium text-gray-700">Call to Action</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900">
+                    <span class="block">From Static Text to</span>
+                    <span class="block text-blue-600">Intelligent Experiences</span>
+                </h1>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">
+                    AI is revolutionizing technical documentation, transforming dense manuals into dynamic, interactive knowledge platforms that accelerate learning and empower users. Explore the transformation.
+                </p>
+            </div>
+        </section>
+
+        <section id="problem" class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">The Static Trap</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        Traditional documentation is fundamentally broken. It creates a widening gap between information and its users, leading to frustration, project delays, and wasted resources. This section explores the core failures of this outdated paradigm.
+                    </p>
+                </div>
+
+                <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                    <div class="card p-6 rounded-lg">
+                        <div class="section-icon">📄</div>
+                        <h3 class="mt-4 text-xl font-semibold">Inaccessible & Unsearchable</h3>
+                        <p class="mt-2 text-gray-600">Valuable knowledge is buried in 500-page PDFs. Users are forced on a "treasure hunt with no treasure," relying on basic keyword searches that lack context.</p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                         <div class="section-icon">👥</div>
+                        <h3 class="mt-4 text-xl font-semibold">One-Size-Fits-All</h3>
+                        <p class="mt-2 text-gray-600">Legacy docs ignore user expertise. A novice is overwhelmed with jargon while an expert is forced to sift through beginner material.</p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                         <div class="section-icon">⏳</div>
+                        <h3 class="mt-4 text-xl font-semibold">Instantly Outdated</h3>
+                        <p class="mt-2 text-gray-600">Manual updates can't keep pace with modern development. Documentation is often wrong the moment it's published, eroding user trust.</p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                         <div class="section-icon">😠</div>
+                        <h3 class="mt-4 text-xl font-semibold">Poor User Experience</h3>
+                        <p class="mt-2 text-gray-600">Information overload, inconsistent terms, and circular references lead to a deeply frustrating experience that hinders product adoption.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-20 text-center">
+                    <h3 class="text-2xl font-bold tracking-tight text-gray-800">The AI Acceleration Paradox</h3>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        AI supercharges engineering, but our documentation practices are stuck in the past. This creates a dangerous gap between what a product *does* and what the documentation *says* it does.
+                    </p>
+                    <div class="chart-container mt-8">
+                        <canvas id="paradoxChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="bg-white py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">The Shift to Intelligent Content</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        The future is not better documents, but a dynamic knowledge ecosystem. Intelligent content is modular, structured, and metadata-rich, designed for machines to process and for humans to consume in the perfect context.
+                    </p>
+                </div>
+                <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                     <div class="p-6">
+                        <div class="section-icon text-blue-600">🎯</div>
+                        <h3 class="mt-4 text-xl font-semibold">Personalized & Adaptive</h3>
+                        <p class="mt-2 text-gray-600">Information dynamically tailors itself to the user's role, expertise, and history—a guided walkthrough for a beginner, raw data for an expert.</p>
+                    </div>
+                    <div class="p-6">
+                         <div class="section-icon text-blue-600">💡</div>
+                        <h3 class="mt-4 text-xl font-semibold">Context-Aware</h3>
+                        <p class="mt-2 text-gray-600">Content that understands the codebase, product version, and the user's current task, providing just-in-time knowledge that finds the user.</p>
+                    </div>
+                    <div class="p-6">
+                         <div class="section-icon text-blue-600">🔄</div>
+                        <h3 class="mt-4 text-xl font-semibold">Living & Dynamic</h3>
+                        <p class="mt-2 text-gray-600">Content is never outdated. It's linked to the product and evolves in lockstep with every code commit and product update.</p>
+                    </div>
+                    <div class="p-6">
+                         <div class="section-icon text-blue-600">💬</div>
+                        <h3 class="mt-4 text-xl font-semibold">Conversational & Discoverable</h3>
+                        <p class="mt-2 text-gray-600">Users ask questions in plain language and get precise answers, transforming documentation from a passive repository to an active partner.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demos" class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">The Future in Focus: AI in Action</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        This isn't theory; it's reality. The transition to intelligent content is delivering transformative value across industries. Select a domain below to see a practical demonstration of how AI-driven information systems solve complex problems.
+                    </p>
+                </div>
+
+                <div class="mt-10 flex flex-wrap justify-center gap-2 md:gap-4">
+                    <button data-demo="semiconductors" class="demo-button px-4 py-2 text-sm font-semibold rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">Semiconductors</button>
+                    <button data-demo="product" class="demo-button px-4 py-2 text-sm font-semibold rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">Product Docs</button>
+                    <button data-demo="personal" class="demo-button px-4 py-2 text-sm font-semibold rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">Personal Development</button>
+                </div>
+
+                <div id="demo-content" class="mt-12">
+                </div>
+            </div>
+        </section>
+        
+        <section id="imperative" class="bg-white py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">The Human Imperative: Our Role in the AI Era</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        AI doesn't replace technical communicators; it elevates them. By automating repetitive tasks, AI frees professionals to focus on higher-value work rooted in strategy, critical thinking, and empathy. The role is evolving from writer to architect.
+                    </p>
+                </div>
+                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">The Technical Communicator, Reimagined</h3>
+                        <p class="mt-4 text-gray-600">The focus shifts from crafting sentences to engineering intelligent information systems. Explore the new strategic roles that are becoming essential in the age of AI.</p>
+                        <div class="mt-6 space-y-4">
+                            <div class="card p-4 rounded-lg cursor-pointer role-card" data-role="architect">
+                                <h4 class="font-semibold text-blue-700">Information Architect</h4>
+                                <p class="text-sm text-gray-600 hidden">Designs the content models, metadata, and taxonomies that make content "intelligent" and discoverable by AI.</p>
+                            </div>
+                            <div class="card p-4 rounded-lg cursor-pointer role-card" data-role="editor">
+                                <h4 class="font-semibold text-gray-800">AI Editor & Curator</h4>
+                                <p class="text-sm text-gray-600 hidden">Acts as the human-in-the-loop to validate AI-generated content for accuracy, tone, and ethical alignment.</p>
+                            </div>
+                            <div class="card p-4 rounded-lg cursor-pointer role-card" data-role="strategist">
+                                <h4 class="font-semibold text-gray-800">Content Strategist</h4>
+                                <p class="text-sm text-gray-600 hidden">Uses data analytics on content usage to plan and prioritize the creation of the most impactful information for users.</p>
+                            </div>
+                            <div class="card p-4 rounded-lg cursor-pointer role-card" data-role="prompt">
+                                <h4 class="font-semibold text-gray-800">Prompt Engineer</h4>
+                                <p class="text-sm text-gray-600 hidden">Crafts precise, context-rich prompts to guide AI systems to produce high-quality, accurate, and desired outputs.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="role-details-container" class="p-6 bg-blue-50 rounded-lg min-h-[200px]">
+                        <h4 id="role-title" class="font-bold text-xl text-blue-800">Information Architect</h4>
+                        <p id="role-description" class="mt-2 text-gray-700">Designs the content models, metadata, and taxonomies that make content "intelligent" and discoverable by AI. They are the master planners of the knowledge ecosystem.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="action" class="py-16 md:py-24">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">A Call to Action</h2>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                        Navigating this transformation requires a proactive commitment from both professionals and leaders. The time to start building the future is today.
+                    </p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold text-gray-800">For Professionals</h3>
+                        <ul class="mt-6 space-y-4 text-gray-700">
+                            <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Embrace Lifelong Learning:</b> Actively use AI tools and adopt a mindset of continuous curiosity.</span></li>
+                            <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Become an AI Power User:</b> Master prompt engineering and build a library of effective prompts.</span></li>
+                            <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Focus on Strategy:</b> Move beyond tactical writing to contribute to information architecture and user journey mapping.</span></li>
+                        </ul>
+                    </div>
+                     <div class="card p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold text-gray-800">For Leaders</h3>
+                        <ul class="mt-6 space-y-4 text-gray-700">
+                            <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Invest in AI-Ready Infrastructure:</b> Adopt modern CCMS and knowledge bases that support structured content.</span></li>
+                             <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Upskill Your Teams:</b> Provide training in AI literacy, data analysis, and information architecture.</span></li>
+                             <li class="flex items-start"><span class="flex-shrink-0 h-6 w-6 text-blue-500 font-bold">✓</span><span class="ml-3"><b>Redefine "Done":</b> Treat high-quality, structured documentation as a core, versioned part of every product release.</span></li>
+                        </ul>
+                    </div>
+                </div>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p>The future of information isn't just about writing better documents.</p>
+            <p class="font-semibold">It's about building smarter, more dynamic, and more valuable information experiences.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const paradoxData = {
+            labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+            datasets: [{
+                label: 'AI-Driven Dev Velocity',
+                data: [10, 20, 35, 60, 100, 150],
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                fill: true,
+                tension: 0.4,
+            }, {
+                label: 'Static Doc Velocity',
+                data: [8, 9, 9.5, 10, 10.5, 11],
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                fill: true,
+                tension: 0.4,
+            }]
+        };
+
+        const paradoxCtx = document.getElementById('paradoxChart').getContext('2d');
+        new Chart(paradoxCtx, {
+            type: 'line',
+            data: paradoxData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Relative Velocity' }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                           label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + 'x';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const demoData = {
+            semiconductors: {
+                title: "Semiconductor Engineer's Copilot",
+                from_scenario: "An engineer needs to configure a PLL for a new Video Clock Synthesizer. They must manually consult datasheets, calculate divider values, and write register configuration code, an error-prone and time-consuming process.",
+                to_scenario: "This interactive tool automates the entire process. By simply selecting a standard, the engineer gets validated PLL values and production-ready C code instantly, eliminating errors and saving hours of manual work.",
+                chart: {
+                    labels: ['Calculation Errors', 'Configuration Time', 'Engineer Productivity'],
+                    data: [99, 90, 45] 
+                }
+            },
+            product: {
+                title: "AI-Powered Content Generation",
+                from_scenario: "A technical writer receives a dense engineering spec. They spend days manually restructuring the information, writing a first draft, and formatting it for different outputs like a user guide and a developer README.",
+                to_scenario: "The writer pastes the spec into an AI tool, selects the desired output formats, and clicks 'Generate'. The AI produces a well-structured, consistent first draft for each document type in minutes, freeing the writer to focus on refining, editing, and adding value.",
+                chart: {
+                    labels: ['Time to First Draft', 'Content Consistency', 'Writer Effort Reduction'],
+                    data: [95, 80, 75]
+                }
+            },
+            personal: {
+                title: "Dynamic Career Portfolio",
+                from_scenario: "A professional's skills are represented by a flat Word document. Projects are just links to scattered GitHub repos, and work samples are hidden in various folders, failing to tell a cohesive story.",
+                to_scenario: "An interactive portfolio, like the live example below, dynamically showcases projects, skills, and experience. Recruiters can filter by skill, view live project demos, and understand the candidate's growth journey in a single, engaging experience.",
+                chart: {
+                    labels: ['Recruiter Engagement', 'Skill Visibility', 'Interview Callback Rate'],
+                    data: [85, 90, 60]
+                }
+            }
+        };
+
+        const demoContentContainer = document.getElementById('demo-content');
+        const demoButtons = document.querySelectorAll('.demo-button');
+        let impactChart = null;
+
+        const videoStandards = {
+            '720p_60': { pixelClock: 74.25 },
+            '1080p_60': { pixelClock: 148.50 },
+            '4k_30': { pixelClock: 297.00 }
+        };
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        function formatCode(code, lang) {
+            let html = escapeHtml(code);
+            if (lang === 'c') {
+                 html = html.replace(/\b(void|uint32_t|const)\b/g, '<span class="token keyword">$&</span>')
+                       .replace(/\b(write_register|configure_pll)\b/g, '<span class="token function">$&</span>')
+                       .replace(/(0x[0-9a-fA-F]+)/g, '<span class="token number">$&</span>')
+                       .replace(/(\/\/.+)/g, '<span class="token comment">$&</span>');
+            } else if (lang === 'md') {
+                html = html.replace(/^(#.+)$/gm, '<span class="token title">$&</span>')
+                           .replace(/(\*\*|__)(.*?)\1/g, '<span class="token strong">$2</span>')
+                           .replace(/`([^`]+)`/g, '<code>$1</code>')
+                           .replace(/^(\s*[-*+]\s+.*)$/gm, '<span class="token list">$&</span>');
+            }
+            return html;
+        }
+
+        function updateSemiconductorDemo() {
+            const standardEl = document.getElementById('videoStandard');
+            const refClockEl = document.getElementById('refClock');
+            if (!standardEl || !refClockEl) return;
+
+            const standard = standardEl.value;
+            const refClock = parseFloat(refClockEl.value) || 100;
+            
+            const target = videoStandards[standard];
+            if (!target) return;
+
+            document.getElementById('pixelClockOut').textContent = `${target.pixelClock.toFixed(2)} MHz`;
+
+            const mDiv = Math.round(target.pixelClock);
+            const dDiv = Math.round(refClock / 10);
+            const oDiv = 1;
+
+            document.getElementById('mDivOut').textContent = mDiv;
+            document.getElementById('dDivOut').textContent = dDiv;
+            document.getElementById('oDivOut').textContent = oDiv;
+
+            const code = `// Code for ${standard.replace('_', ' @ ')}Hz, ${refClock}MHz ref
+void configure_pll(void) {
+    // 1. Power down PLL
+    write_register(0x1000, 0x0001);
+
+    // 2. Set dividers
+    write_register(0x1004, ${mDiv}); // M-Divider
+    write_register(0x1008, ${dDiv}); // D-Divider
+    write_register(0x100C, ${oDiv}); // O-Divider
+
+    // 3. Power up and wait for lock
+    write_register(0x1000, 0x0002); 
+}`;
+            document.getElementById('codeOutput').innerHTML = formatCode(code, 'c');
+        }
+        
+        async function handleProductDocGeneration() {
+            const outputEl = document.getElementById('productDocOutput');
+            const generateBtn = document.getElementById('generateDocBtn');
+            const docType = document.getElementById('productDocType').value;
+            const specInfo = document.getElementById('productSpec').value;
+            
+            generateBtn.disabled = true;
+            outputEl.innerHTML = `<div class="flex items-center justify-center h-full"><div class="text-slate-400">Generating document...</div></div>`;
+
+            let prompt = `Act as an expert technical writer. Generate a technically accurate draft in active voice based on the following information. `;
+            
+            let format_instructions = "";
+            if (docType === 'user_guide') {
+                format_instructions = "Format the output as a simple User Guide with clear headings and steps.";
+            } else if (docType === 'readme') {
+                format_instructions = "Format the output as a GitHub-flavored Markdown README.md file.";
+            } else if (docType === 'dita') {
+                format_instructions = "First, analyze the provided specification to determine if it primarily describes a 'concept' (what something is), a 'task' (how to do something), or a 'reference' (data or specs). Then, generate a well-structured DITA XML document using the most appropriate topic type: <concept>, <task>, or <reference>. The output must be only the XML content, starting with the topic type tag.";
+            }
+            
+            prompt += `\n\nSPECIFICATION:\n${specInfo}\n\nFORMATTING INSTRUCTIONS:\n${format_instructions}`;
+
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    let formattedText = '';
+                    if (docType === 'dita') {
+                        const cleanXml = text.replace(/^```xml\n?/, '').replace(/```$/, '');
+                        formattedText = `<pre><code class="language-xml">${escapeHtml(cleanXml)}</code></pre>`;
+                    } else if (docType === 'readme') {
+                        formattedText = `<pre><code class="language-md">${formatCode(text, 'md')}</code></pre>`;
+                    } else {
+                        formattedText = `<div class="p-4 text-sm">${text.replace(/\n/g, '<br>')}</div>`;
+                    }
+                    outputEl.innerHTML = formattedText;
+                } else {
+                    throw new Error("No content generated.");
+                }
+
+            } catch (error) {
+                outputEl.innerHTML = `<div class="flex items-center justify-center h-full"><div class="text-red-500 p-4">Error: ${error.message}</div></div>`;
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        function updateDemoContent(demoKey) {
+            const data = demoData[demoKey];
+            if (!data) return;
+
+            demoButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.demo === demoKey);
+            });
+            
+            let contentHTML = '';
+
+            if (demoKey === 'semiconductors') {
+                contentHTML = `
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center text-blue-700">${data.title}</h3>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                        <div class="p-6 rounded-lg bg-red-50 border border-red-200">
+                           <h4 class="font-semibold text-red-800">The Problem: Manual Configuration</h4>
+                           <p class="mt-2 text-red-700">${data.from_scenario}</p>
+                        </div>
+                        <div class="p-6 rounded-lg bg-green-50 border border-green-200">
+                           <h4 class="font-semibold text-green-800">The Solution: Intelligent Automation</h4>
+                           <p class="mt-2 text-green-700">${data.to_scenario}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 max-w-6xl mx-auto border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+                        <div class="grid lg:grid-cols-5">
+                            <div class="lg:col-span-2 p-8 config-panel">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-6">1. Select Video Standard</h3>
+                                <div class="space-y-6">
+                                    <div>
+                                        <label for="videoStandard" class="block text-sm font-medium text-slate-700 mb-2">Standard</label>
+                                        <select id="videoStandard">
+                                            <option value="720p_60">720p @ 60Hz</option>
+                                            <option value="1080p_60" selected>1080p @ 60Hz</option>
+                                            <option value="4k_30">4K (UHD) @ 30Hz</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                         <label for="refClock" class="block text-sm font-medium text-slate-700 mb-2">Reference Clock (MHz)</label>
+                                         <input type="number" id="refClock" value="100">
+                                    </div>
+                                    <div class="pt-4 space-y-4">
+                                         <h4 class="text-xl font-bold text-slate-800">2. Calculated PLL Values</h4>
+                                         <div class="output-field">
+                                            <label class="block text-xs text-slate-500">Required Pixel Clock</label>
+                                            <p id="pixelClockOut" class="text-lg font-semibold text-blue-600">148.50 MHz</p>
+                                         </div>
+                                         <div class="grid grid-cols-3 gap-4">
+                                            <div class="output-field text-center">
+                                                <label class="block text-xs text-slate-500">M-Divider</label>
+                                                <p id="mDivOut" class="text-lg font-semibold text-slate-700">148</p>
+                                            </div>
+                                            <div class="output-field text-center">
+                                                <label class="block text-xs text-slate-500">D-Divider</label>
+                                                <p id="dDivOut" class="text-lg font-semibold text-slate-700">10</p>
+                                            </div>
+                                            <div class="output-field text-center">
+                                                <label class="block text-xs text-slate-500">O-Divider</label>
+                                                <p id="oDivOut" class="text-lg font-semibold text-slate-700">1</p>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 p-8 code-panel relative">
+                                 <h3 class="text-2xl font-bold text-slate-200 mb-6">3. Generated C Code</h3>
+                                <button id="copyBtn" class="absolute top-8 right-8 bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-md text-sm font-medium flex items-center space-x-2 transition">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span id="copyBtnText">Copy</span>
+                                </button>
+                                <pre class="mt-4 text-sm overflow-x-auto"><code id="codeOutput" class="language-c"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            } else if (demoKey === 'product') {
+                 contentHTML = `
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center text-blue-700">${data.title}</h3>
+                     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                        <div class="p-6 rounded-lg bg-red-50 border border-red-200">
+                           <h4 class="font-semibold text-red-800">The Problem: Manual Drafting</h4>
+                           <p class="mt-2 text-red-700">${data.from_scenario}</p>
+                        </div>
+                        <div class="p-6 rounded-lg bg-green-50 border border-green-200">
+                           <h4 class="font-semibold text-green-800">The Solution: AI-Accelerated Drafting</h4>
+                           <p class="mt-2 text-green-700">${data.to_scenario}</p>
+                        </div>
+                    </div>
+                    <div class="mt-12 max-w-6xl mx-auto border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+                        <div class="grid lg:grid-cols-2">
+                            <div class="p-8 config-panel">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-6">1. Provide Source Information</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="productSpec" class="block text-sm font-medium text-slate-700 mb-2">Product Spec / PRD</label>
+                                        <textarea id="productSpec" rows="6" class="text-sm">Product: PhotoFlow v1.0&#10;Feature: AI Auto-Tagging. Uses computer vision to apply descriptive tags to photos (e.g., sunset, beach, portrait).&#10;Constraint: Must enter low-power state after 5 mins of inactivity.</textarea>
+                                    </div>
+                                    <div>
+                                        <label for="productGraphic" class="block text-sm font-medium text-slate-700 mb-2">Upload Graphic (Optional)</label>
+                                        <input type="file" id="productGraphic" class="text-sm">
+                                    </div>
+                                    <div>
+                                        <label for="productDocType" class="block text-sm font-medium text-slate-700 mb-2">Select Document Type</label>
+                                        <select id="productDocType">
+                                            <option value="user_guide">User Guide</option>
+                                            <option value="readme">GitHub README.md</option>
+                                            <option value="dita">DITA XML</option>
+                                        </select>
+                                    </div>
+                                    <div class="pt-2">
+                                        <button id="generateDocBtn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition flex items-center justify-center space-x-2 disabled:bg-slate-400">
+                                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                                            <span>Generate Document</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-8 bg-slate-50 border-l border-slate-200">
+                                <h3 class="text-2xl font-bold text-slate-800 mb-6">2. AI-Generated Output</h3>
+                                <div id="productDocOutput" class="product-output h-80 bg-white rounded-lg border border-slate-200 overflow-y-auto p-4 text-sm">
+                                    <div class="flex items-center justify-center h-full"><div class="text-slate-400">Output will appear here</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            } else { // Personal Dev
+                 contentHTML = `
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center text-blue-700">${data.title}</h3>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                        <div class="p-6 rounded-lg bg-red-50 border border-red-200">
+                           <h4 class="font-semibold text-red-800">The Problem: Static & Scattered</h4>
+                           <p class="mt-2 text-red-700">${data.from_scenario}</p>
+                        </div>
+                        <div class="p-6 rounded-lg bg-green-50 border border-green-200">
+                           <h4 class="font-semibold text-green-800">The Solution: Dynamic & Interactive</h4>
+                           <p class="mt-2 text-green-700">${data.to_scenario}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-12">
+                        <h4 class="text-xl font-bold text-center text-gray-800">Live Portfolio Example</h4>
+                        <div class="mt-4 max-w-7xl mx-auto border-4 border-slate-200 bg-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+                            <div class="bg-slate-700 p-2 flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                            <iframe class="w-full h-[70vh] border-0" src="https://amantalwar04.github.io/portfolio/"></iframe>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+
+            // Common part for chart
+            if (data.chart) {
+                 contentHTML += `
+                    <div class="mt-12">
+                         <h4 class="text-xl font-bold text-center text-gray-800">Quantified Business Impact</h4>
+                         <p class="text-center text-gray-600 mt-1">Relative percentage improvement from Static to Intelligent.</p>
+                         <div class="chart-container mt-4">
+                            <canvas id="impactChart"></canvas>
+                         </div>
+                    </div>
+                `;
+            }
+            demoContentContainer.innerHTML = contentHTML;
+
+            if (demoKey === 'semiconductors') {
+                document.getElementById('videoStandard').addEventListener('change', updateSemiconductorDemo);
+                document.getElementById('refClock').addEventListener('input', updateSemiconductorDemo);
+                document.getElementById('copyBtn').addEventListener('click', () => {
+                    const codeToCopy = document.getElementById('codeOutput').textContent;
+                    const textArea = document.createElement('textarea');
+                    textArea.value = codeToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        document.getElementById('copyBtnText').textContent = 'Copied!';
+                        setTimeout(() => {
+                           document.getElementById('copyBtnText').textContent = 'Copy';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                    }
+                    document.body.removeChild(textArea);
+                });
+                updateSemiconductorDemo();
+            } else if (demoKey === 'product') {
+                document.getElementById('generateDocBtn').addEventListener('click', handleProductDocGeneration);
+            }
+
+            // Create chart for demos that have it
+            if (data.chart) {
+                const impactCtx = document.getElementById('impactChart').getContext('2d');
+                if (impactChart) {
+                    impactChart.destroy();
+                }
+                impactChart = new Chart(impactCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.chart.labels,
+                        datasets: [{
+                            label: '% Improvement',
+                            data: data.chart.data,
+                            backgroundColor: ['#34d399', '#60a5fa', '#facc15'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) { return value + "%" }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+            
+            lucide.createIcons();
+        }
+        
+        demoButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateDemoContent(button.dataset.demo);
+            });
+        });
+
+        updateDemoContent('semiconductors');
+        
+        const roleCards = document.querySelectorAll('.role-card');
+        const roleTitleEl = document.getElementById('role-title');
+        const roleDescriptionEl = document.getElementById('role-description');
+        const roleData = {
+            architect: {
+                title: "Information Architect",
+                description: "Designs the content models, metadata, and taxonomies that make content 'intelligent' and discoverable by AI. They are the master planners of the knowledge ecosystem."
+            },
+            editor: {
+                title: "AI Editor & Curator",
+                description: "Acts as the essential human-in-the-loop to validate AI-generated content for accuracy, tone, and ethical alignment. They ensure quality and trustworthiness."
+            },
+            strategist: {
+                title: "Content Strategist & Analyst",
+                description: "Uses data analytics on content usage to plan and prioritize the creation of the most impactful information for users, ensuring resources are focused on value."
+            },
+            prompt: {
+                title: "Prompt Engineer",
+                description: "Crafts precise, context-rich prompts to guide AI systems to produce high-quality, accurate, and desired outputs. They are the expert communicators with AI."
+            }
+        };
+
+        roleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const roleKey = card.dataset.role;
+                const data = roleData[roleKey];
+                
+                roleTitleEl.textContent = data.title;
+                roleDescriptionEl.textContent = data.description;
+                
+                roleCards.forEach(c => {
+                    c.querySelector('h4').classList.remove('text-blue-700');
+                    c.querySelector('h4').classList.add('text-gray-800');
+                });
+                card.querySelector('h4').classList.add('text-blue-700');
+                card.querySelector('h4').classList.remove('text-gray-800');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
