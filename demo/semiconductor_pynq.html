@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive PYNQ-Z1 Setup Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+        /* Animation for step content */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        .step-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Checklist styling */
+        .checklist-item input:checked + label {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        
+        /* Image styling */
+        .guide-image {
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s ease;
+        }
+        .guide-image:hover {
+            transform: scale(1.03);
+        }
+
+        .info-box {
+            padding: 1rem;
+            border-left-width: 4px;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-top: 1.5rem;
+        }
+        .info-box h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Comprehensive PYNQ-Z1 Setup Guide</h1>
+            <p class="text-gray-600 mt-2 max-w-2xl mx-auto">A complete, step-by-step wizard to get your PYNQ board up and running smoothly.</p>
+            <p class="text-sm text-gray-500 mt-4">Based on the official documentation. <a href="https://github.com/Xilinx/PYNQ/blob/v3.0.0/docs/source/getting_started/pynq_z1_setup.rst" target="_blank" class="text-indigo-500 hover:underline">View source on GitHub</a></p>
+        </header>
+
+        <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-2xl overflow-hidden">
+            <!-- Sidebar / Progress Tracker -->
+            <aside id="progress-sidebar" class="w-full md:w-1/3 lg:w-1/4 p-6 bg-gray-50/70 border-b md:border-b-0 md:border-r border-gray-200">
+                <h2 class="text-lg font-semibold mb-4 text-gray-800">Setup Progress</h2>
+                <nav>
+                    <ul id="step-list" class="space-y-2">
+                        <!-- Steps will be dynamically inserted here by JavaScript -->
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="w-full md:w-2/3 lg:w-3/4 p-6 md:p-10">
+                <div id="steps-container">
+                    <!-- Step 1: Introduction -->
+                    <div id="step-1" class="step-content active">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">Welcome!</h3>
+                        <p class="mb-4 text-lg">This guide provides a comprehensive walkthrough for setting up your PYNQ-Z1 board. PYNQ is an open-source project from Xilinx that makes it easy to design with Xilinx Zynq SoCs.</p>
+                        <p class="mb-6">Follow the steps in the sidebar to prepare your SD card, set up the hardware, and connect to your board.</p>
+                        <img src="https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.0/docs/source/_static/pynq-z1.jpg" alt="PYNQ-Z1 Board" class="guide-image mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/4a5568?text=PYNQ-Z1+Board';">
+                    </div>
+
+                    <!-- Step 2: Prerequisites -->
+                    <div id="step-2" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">1. What You Need</h3>
+                        <p class="mb-6">Before you begin, make sure you have all the required hardware. Check off each item as you confirm you have it.</p>
+                        <div id="checklist" class="space-y-4">
+                           <!-- Checklist items will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Get PYNQ Image -->
+                    <div id="step-3" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">2. Get the PYNQ-Z1 Image</h3>
+                        <p class="mb-4">You need to download the official PYNQ image for your Z1 board. This file contains the complete operating system and all the necessary PYNQ software.</p>
+                         <a href="http://www.pynq.io/board.html" target="_blank" class="inline-flex items-center px-6 py-3 mb-6 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-all duration-300 transform hover:scale-105">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            Download PYNQ-Z1 Image
+                        </a>
+                        <div class="info-box bg-gray-50 border-indigo-400">
+                            <h4>After Downloading:</h4>
+                            <p>The downloaded file will be a compressed archive (e.g., a <code class="bg-gray-200 px-1 rounded">.zip</code> or <code class="bg-gray-200 px-1 rounded">.xz</code> file). You must extract it to get the <code class="bg-gray-200 px-1 rounded">.img</code> file, which you will write to your SD card in the next step.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Write SD Card Image -->
+                    <div id="step-4" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">3. Write the SD Card Image</h3>
+                        <p class="mb-4">Now you need to write the <code class="bg-gray-200 px-1 rounded">.img</code> file to your Micro SD card. This process will erase everything on the card.</p>
+                        <p class="mb-6">We recommend using a tool like <a href="https://www.balena.io/etcher/" target="_blank" class="text-indigo-500 hover:underline font-semibold">Balena Etcher</a>, as it's simple and works on Windows, macOS, and Linux.</p>
+                        <img src="https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.0/docs/source/_static/etcher.png" alt="Balena Etcher Software" class="guide-image mx-auto my-6" onerror="this.onerror=null;this.src='https://placehold.co/600x350/e2e8f0/4a5568?text=Balena+Etcher';">
+                        <ol class="list-decimal list-inside space-y-3">
+                            <li>Insert the Micro SD card into your computer.</li>
+                            <li>Open Balena Etcher (or your chosen imaging tool).</li>
+                            <li><strong>Select Image:</strong> Choose the PYNQ <code class="bg-gray-200 px-1 rounded">.img</code> file you extracted.</li>
+                            <li><strong>Select Drive:</strong> Carefully choose your Micro SD card. <strong class="text-red-600">Be very careful to select the correct drive!</strong></li>
+                            <li><strong>Flash!</strong> Click the button to write the image to the card. This may take several minutes.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Step 5: Setup the Board -->
+                    <div id="step-5" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">4. Setup the Board Hardware</h3>
+                        <p class="mb-6">With your SD card ready, it's time to configure the physical board jumpers.</p>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <div class="flex items-start mb-4">
+                                    <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4">1</div>
+                                    <p class="flex-1">Safely eject the Micro SD card from your computer and insert it into the Micro SD card slot on the PYNQ-Z1 board.</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4">2</div>
+                                    <p class="flex-1">Set the <strong>Boot Jumper (JP4)</strong> to the <strong>SD</strong> position. This tells the board to boot from the SD card.</p>
+                                </div>
+                                <div class="flex items-start mt-4">
+                                    <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4">3</div>
+                                    <p class="flex-1">Set the <strong>Power Jumper (JP5)</strong> to the <strong>USB</strong> position. This allows the board to be powered from the Micro-USB cable.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.0/docs/source/_static/pynq-z1_boot_jumper.jpg" alt="PYNQ-Z1 Boot Jumper" class="guide-image" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/4a5568?text=Boot+Jumper';">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Connect and Power On -->
+                    <div id="step-6" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">5. Connect and Power On</h3>
+                        <p class="mb-6">You're almost there! Now, let's connect everything and power up the board.</p>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <ol class="list-decimal list-inside space-y-3">
+                                <li>Connect the Micro-USB cable from your PC to the <code class="bg-gray-200 px-1 rounded">USB/UART</code> port on the board.</li>
+                                <li>Connect the Ethernet cable. The other end can go to your PC, a router, or a corporate network.</li>
+                                <li>Connect the power adapter to the board to turn it on.</li>
+                            </ol>
+                             <div>
+                                <img src="https://raw.githubusercontent.com/Xilinx/PYNQ/v3.0.0/docs/source/_static/pynq-z1_power_on.jpg" alt="Connecting cables to PYNQ-Z1" class="guide-image" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/4a5568?text=Board+Connections';">
+                            </div>
+                        </div>
+                        <div class="info-box bg-yellow-50 border-yellow-400">
+                            <h4 class="text-yellow-800">Boot Sequence</h4>
+                            <p>After powering on, you will see some LEDs light up. The board is fully booted when the two blue LEDs and the four yellow/green user LEDs are on. This can take up to 3 minutes.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 7: Access Jupyter -->
+                    <div id="step-7" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">6. Access Jupyter Lab</h3>
+                        <p class="mb-4">Once the board has booted, you can access the PYNQ environment through your web browser. The method depends on how you connected the Ethernet cable.</p>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2">Option A: Connected to a Network Router</h4>
+                                <p>Open a browser and navigate to <a href="http://pynq:9090" target="_blank" class="text-indigo-500 hover:underline font-semibold">http://pynq:9090</a>. If your computer supports mDNS, this should work automatically.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2">Option B: Connected Directly to a PC</h4>
+                                <p>You must manually configure your PC's network settings. Set the IP address to <code class="bg-gray-200 px-1 rounded">192.168.2.1</code> and the subnet mask to <code class="bg-gray-200 px-1 rounded">255.255.255.0</code>. Then, navigate to <a href="http://192.168.2.99:9090" target="_blank" class="text-indigo-500 hover:underline font-semibold">http://192.168.2.99:9090</a>.</p>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-lg mb-2">Option C: Connected to a Corporate Network</h4>
+                                <p>The board will be assigned an IP by DHCP. You will need to find this IP address. You can do this by connecting to the board via a serial terminal (see Troubleshooting) and running <code class="bg-gray-200 px-1 rounded">ifconfig</code>.</p>
+                            </div>
+                        </div>
+
+                        <div class="info-box bg-gray-50 border-gray-400">
+                           <h4>Login Information</h4>
+                           <p>When prompted for a password, use the default:</p>
+                           <code class="block bg-gray-200 p-2 mt-2 rounded text-center font-mono tracking-widest">xilinx</code>
+                        </div>
+                    </div>
+
+                    <!-- Step 8: Troubleshooting -->
+                    <div id="step-8" class="step-content">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">7. Troubleshooting</h4>
+                        <p class="mb-4">If you encounter issues, here are some common solutions.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Connecting to a Serial Terminal</h4>
+                                <p>If you can't connect via the network, you can use a serial terminal (like PuTTY or Tera Term) to get command-line access. Find the COM port for the USB/UART device in your computer's device manager and connect with the following settings:</p>
+                                <ul class="list-disc list-inside ml-4 mt-2">
+                                    <li>Baud rate: <strong>115200</strong></li>
+                                    <li>Data bits: <strong>8</strong></li>
+                                    <li>Stop bits: <strong>1</strong></li>
+                                    <li>Parity: <strong>None</strong></li>
+                                    <li>Flow control: <strong>None</strong></li>
+                                </ul>
+                                <p class="mt-2">You can log in with username <code class="bg-gray-200 px-1 rounded">xilinx</code> and password <code class="bg-gray-200 px-1 rounded">xilinx</code>.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Finding the IP Address</h4>
+                                <p>Once connected via serial, run <code class="bg-gray-200 px-1 rounded">ifconfig eth0</code> to see the IP address assigned to the board's Ethernet port.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 9: Finished -->
+                    <div id="step-9" class="step-content">
+                        <div class="text-center py-8">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-green-500 mb-4 animate-pulse"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <h3 class="text-3xl font-bold text-green-600 mb-4">Setup Complete!</h3>
+                            <p class="text-lg mb-4">Congratulations! Your PYNQ-Z1 board is now set up and ready to use.</p>
+                            <p>You can now start exploring the example notebooks in Jupyter Lab to learn what PYNQ can do.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div id="navigation-buttons" class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+                    <button id="prev-btn" class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg shadow-sm hover:bg-gray-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                    <button id="next-btn" class="px-8 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200 transform hover:scale-105">Next Step</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = [
+                { id: 1, title: 'Introduction' },
+                { id: 2, title: 'Prerequisites' },
+                { id: 3, title: 'Get PYNQ Image' },
+                { id: 4, title: 'Write SD Card Image' },
+                { id: 5, title: 'Setup the Board' },
+                { id: 6, title: 'Connect & Power On' },
+                { id: 7, title: 'Access Jupyter' },
+                { id: 8, title: 'Troubleshooting' },
+                { id: 9, title: 'Finished!' }
+            ];
+
+            const checklistItems = [
+                { text: 'PYNQ-Z1 board' },
+                { text: 'Micro-USB to USB-A cable' },
+                { text: 'Micro SD card (16GB+ recommended)' },
+                { text: 'Ethernet cable' },
+                { text: '5V power adapter' }
+            ];
+
+            let currentStep = 1;
+            const stepList = document.getElementById('step-list');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            function initializeChecklist() {
+                const checklistContainer = document.getElementById('checklist');
+                checklistItems.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'checklist-item flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200 transition-all duration-200 hover:bg-gray-100';
+                    div.innerHTML = `
+                        <input id="check-${index}" type="checkbox" class="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                        <label for="check-${index}" class="ml-3 text-gray-700 cursor-pointer transition-colors duration-200">${item.text}</label>
+                    `;
+                    checklistContainer.appendChild(div);
+                });
+            }
+
+            function updateStepList() {
+                stepList.innerHTML = '';
+                steps.forEach(step => {
+                    const li = document.createElement('li');
+                    const isCompleted = step.id < currentStep;
+                    const isActive = step.id === currentStep;
+
+                    let statusClass = 'bg-white text-gray-500 hover:bg-gray-200';
+                    if (isActive) statusClass = 'bg-indigo-100 text-indigo-700 font-semibold';
+                    if (isCompleted) statusClass = 'bg-green-100 text-green-800 hover:bg-green-200';
+                    
+                    let icon = `
+                        <div class="w-6 h-6 rounded-full ${isCompleted ? 'bg-green-500' : 'bg-gray-300'} flex items-center justify-center mr-3 flex-shrink-0 transition-all duration-300">
+                            ${isCompleted ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : `<span class="text-xs font-bold text-gray-600">${step.id}</span>`}
+                        </div>
+                    `;
+
+                    li.className = `flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 ${statusClass}`;
+                    li.dataset.step = step.id;
+                    li.innerHTML = `${icon}<span>${step.title}</span>`;
+                    stepList.appendChild(li);
+                });
+                
+                stepList.querySelectorAll('li').forEach(li => {
+                    li.addEventListener('click', (e) => {
+                        // Allow navigation to any step that has been visited
+                        const stepId = parseInt(li.dataset.step);
+                        if (stepId <= steps.length) {
+                             currentStep = stepId;
+                             updateUI();
+                        }
+                    });
+                });
+            }
+
+            function showStep(stepId) {
+                document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+                const newStep = document.getElementById(`step-${stepId}`);
+                if (newStep) {
+                    newStep.classList.add('active');
+                }
+            }
+
+            function updateUI() {
+                showStep(currentStep);
+                updateStepList();
+                updateButtons();
+            }
+
+            function updateButtons() {
+                prevBtn.disabled = currentStep === 1;
+                if (currentStep === steps.length) {
+                    nextBtn.textContent = 'Finish';
+                } else {
+                    nextBtn.textContent = 'Next Step';
+                }
+
+                if (currentStep > steps.length) {
+                    const navigationButtons = document.getElementById('navigation-buttons');
+                    navigationButtons.innerHTML = `<p class="text-center w-full text-green-600 font-semibold">You have completed all the steps!</p>`;
+                }
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateUI();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep <= steps.length) {
+                    currentStep++;
+                    updateUI();
+                }
+            });
+
+            // Initial setup
+            initializeChecklist();
+            updateUI();
+        });
+    </script>
+
+</body>
+</html>
