@@ -125,6 +125,41 @@
                 transform: translateY(0);
             }
         }
+
+        /* Demo Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -141,7 +176,10 @@
                     <p class="text-md text-slate-500 mt-1">Hyderabad, Telangana, India</p>
                 </div>
             </div>
-            <div class="flex space-x-4">
+            <div class="flex space-x-4 items-center">
+                <button id="demo-button" class="text-slate-500 hover:text-blue-600 transition duration-300" title="Demos">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </button>
                 <a href="https://www.linkedin.com/in/amantalwar" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-600 transition duration-300" title="LinkedIn">
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014V8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.71zM4.988 7.42a1.448 1.448 0 11-2.9 0 1.448 1.448 0 012.9 0zM6.443 8.59H3.53v7.748h2.913V8.59zM17.835 2H6.165A4.17 4.17 0 002 6.165v11.67A4.17 4.17 0 006.165 22h11.67A4.17 4.17 0 0022 17.835V6.165A4.17 4.17 0 0017.835 2z" clip-rule="evenodd"></path></svg>
                 </a>
@@ -171,7 +209,7 @@
             <div class="timeline-container">
                 <div class="timeline-track"></div>
                 <div id="timeline-avatar">
-                    <img src="https://media.licdn.com/dms/image/v2/D5603AQGOqVyPAwjM3Q/profile-displayphoto-scale_200_200/B56ZfoS6P_HEAk-/0/1751948961468?e=1757548800&v=beta&t=32XViDK9WtHvv6UUlps6Yd0YZLeQ0w0hiT6wWO-ee2k" onerror="this.onerror=null;this.src='https://placehold.co/44x44/3b82f6/ffffff?text=AT&font=inter';" alt="Amandeep Talwar Avatar">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQGOqVyPAwjM3Q/profile-displayphoto-scale_200_200/B56ZfoS6P_HEAk-/0/1751948961468?e=1757548800&v=beta&t=32XViDK9tHvv6UUlps6Yd0YZLeQ0w0hiT6wWO-ee2k" onerror="this.onerror=null;this.src='https://placehold.co/44x44/3b82f6/ffffff?text=AT&font=inter';" alt="Amandeep Talwar Avatar">
                 </div>
                 <div id="timeline-markers"></div>
             </div>
@@ -219,6 +257,20 @@
              </a>
         </section>
 
+    </div>
+
+    <!-- Demo Modal -->
+    <div id="demo-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Demos</h3>
+                <button id="close-modal-button" class="text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="demo-list" class="space-y-3">
+                <!-- Dynamic content will be injected here -->
+                <p>Loading demos...</p>
+            </div>
+        </div>
     </div>
 
     <footer class="text-center p-6 mt-12 bg-slate-100">
@@ -448,6 +500,67 @@
 
             // Initial tab display
             displayTabContent('skills');
+
+            // --- DEMO MODAL LOGIC ---
+            const demoButton = document.getElementById('demo-button');
+            const demoModal = document.getElementById('demo-modal');
+            const closeModalButton = document.getElementById('close-modal-button');
+            const demoListContainer = document.getElementById('demo-list');
+
+            const GITHUB_USER = 'amantalwar';
+            const GITHUB_REPO = 'portfolio';
+            const DEMO_FOLDER = 'demos';
+            const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DEMO_FOLDER}`;
+
+            async function fetchDemos() {
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) {
+                        throw new Error(`GitHub API error: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    if (Array.isArray(data) && data.length > 0) {
+                        let listHtml = '<ul class="space-y-2">';
+                        data.forEach(item => {
+                            if (item.type === 'file') {
+                                // Create a more readable title from the file name
+                                const title = item.name.replace(/-/g, ' ').replace(/\.html$/, '')
+                                                   .replace(/\b\w/g, l => l.toUpperCase());
+                                listHtml += `
+                                    <li>
+                                        <a href="${item.html_url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            ${title}
+                                        </a>
+                                    </li>`;
+                            }
+                        });
+                        listHtml += '</ul>';
+                        demoListContainer.innerHTML = listHtml;
+                    } else {
+                        demoListContainer.innerHTML = '<p>No demos found in this repository.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error fetching demos:', error);
+                    demoListContainer.innerHTML = '<p class="text-red-500">Could not load demos. Please try again later.</p>';
+                }
+            }
+
+            demoButton.addEventListener('click', () => {
+                demoModal.classList.add('visible');
+                fetchDemos();
+            });
+
+            closeModalButton.addEventListener('click', () => {
+                demoModal.classList.remove('visible');
+            });
+
+            demoModal.addEventListener('click', (e) => {
+                if (e.target === demoModal) {
+                    demoModal.classList.remove('visible');
+                }
+            });
         });
     </script>
 </body>
