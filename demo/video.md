@@ -13,9 +13,21 @@ This file documents the videos available in the repo (MP4 and WebM), shows how t
 
 ---
 
+## Watch the videos here
+
+<video controls playsinline preload="metadata" style="max-width:100%;height:auto;">
+  <source src="https://raw.githubusercontent.com/amantalwar04/portfolio/main/demo/file_example_WEBM_1920_3_7MB.webm" type="video/webm">
+  <source src="https://raw.githubusercontent.com/amantalwar04/portfolio/main/demo/file_example_MP4_1920_18MG.mp4" type="video/mp4">
+  Your browser does not support the video tag. You can download the videos directly:
+  - <a href="https://github.com/amantalwar04/portfolio/blob/main/demo/file_example_WEBM_1920_3_7MB.webm">WebM</a>
+  - <a href="https://github.com/amantalwar04/portfolio/blob/main/demo/file_example_MP4_1920_18MG.mp4">MP4</a>
+</video>
+
+---
+
 ## Embedded example (WebM first, MP4 fallback)
 
-Use this HTML snippet in markdown or an HTML page to embed the videos. The poster attribute is optional — add `demo/poster.jpg` (or point to an existing image) if you want a thumbnail shown before playback.
+Use this HTML snippet in markdown or an HTML page to embed the videos. The poster attribute is optional — add `demo/poster.jpg` (or point to an existing image) if you want a thumbnail shown before playing.
 
 ```html
 <video controls playsinline preload="metadata" poster="https://raw.githubusercontent.com/amantalwar04/portfolio/main/demo/poster.jpg" style="max-width:100%;height:auto;">
@@ -118,7 +130,7 @@ ffmpeg -i input.mp4 -vf "scale=-2:480" -c:v libx264 -preset fast -crf 28 -c:a aa
 ## Suggested next actions I can take for you
 
 - Create `demo/videos/` and update this file to reference the new paths.
-- Move the existing video files into `demo/videos/` (note: moving large binary files within git will rewrite history only if you rebase — otherwise it's a normal move in a new commit). I can add a commit that adds copies in `demo/videos/` and then remove the originals if you prefer.
+- Move the existing video files into `demo/videos/` (note: moving large binary files within git will rewrite history only if you rebase — otherwise it's a normal move in a new commit). I can add a commit for this.
 - Add `demo/poster.jpg` (I can create a poster by extracting a frame if you want).
 - Create WebVTT caption templates for the videos.
 
